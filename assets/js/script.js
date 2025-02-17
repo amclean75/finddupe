@@ -5,9 +5,10 @@ function searchDupe() {
         return;
     }
 
-    fetch("../../netlify/functions/finddupe?query=" + encodeURIComponent(query))
+    fetch("/.netlify/functions/finddupe?query=" + encodeURIComponent(query))
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             if (data.dupeLink) {
                 document.getElementById("results").innerHTML =
                     `<a href="${data.dupeLink}" target="_blank">Best dupe found: ${data.dupeTitle}</a>`;
