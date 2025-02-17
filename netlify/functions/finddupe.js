@@ -1,31 +1,30 @@
-const fetch = require("node-fetch");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+// Load API key from environment variables
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 exports.handler = async (event) => {
     const query = event.queryStringParameters.q;
-    console.log("🔍 Search Query Received:", query); // Log search term
+    console.log("🔍 Search Query Received:", query);
 
-    const apiKey = "AIzaSyBDAg_ENG88ttCwbA0kN-_QT2lQP1cMQNY";  
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const prompt = `Find the best budget-friendly alternative (dupe) for: ${query}. 
+    The dupe must be available on Amazon. Do NOT provide URLs, just return the product name and brand.
+    Example: "Tozo T10 Wireless Earbuds"`;
 
-    const prompt = `Find the best budget-friendly alternative (dupe) for: ${query}. The dupe must be available on Amazon. Do NOT provide URLs, just return the product name and brand. Example: "Tozo T10 Wireless Earbuds"`;
-
-    console.log("🔍 Sending request to Gemini API with prompt:", prompt); // Log prompt
+    console.log("🔍 Sending request to Gemini API with prompt:", prompt);
 
     try {
-        const response = await fetch(geminiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt }),
+        // Gemini expects the request in a specific format
+        const result = await model.generateContent({
+            contents: [{ parts: [{ text: prompt }] }],
         });
 
-        console.log("🔍 Response received from Gemini API"); // Log response received
+        const dupeResult = result.response.candidates?.[0]?.content?.parts?.[0]?.text || "No Amazon dupe found.";
 
-        const data = await response.json();
-        console.log("🔍 Full API Response:", JSON.stringify(data, null, 2)); // Log full response
+        console.log("🔍 AI Suggested Dupe:", dupeResult);
 
-        const dupeResult = data.candidates?.[0]?.content?.parts?.[0]?.text || "No Amazon dupe found.";
-
-        // Generate a proper Amazon search URL with affiliate tag
+        // Generate an Amazon search URL with the affiliate tag
         const amazonSearchUrl = `https://www.amazon.com/s?k=${encodeURIComponent(dupeResult)}&tag=finddupe-20`;
 
         return {        
@@ -33,7 +32,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({ dupe: dupeResult, link: amazonSearchUrl }),
         };
     } catch (error) {
-        console.error("Error fetching from Gemini API:", error); // Log error
+        console.error("❌ Error fetching from Gemini API:", error);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: "Error fetching dupe." }),
