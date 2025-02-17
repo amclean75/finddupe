@@ -5,7 +5,7 @@ function searchDupe() {
         return;
     }
 
-    fetch("/.netlify/functions/finddupe?query=" + encodeURIComponent(query))
+    fetch("../../netlify/functions/finddupe?query=" + encodeURIComponent(query))
         .then(response => response.json())
         .then(data => {
             if (data.dupeLink) {
