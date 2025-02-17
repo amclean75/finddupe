@@ -1,9 +1,19 @@
+function updateSchema(query) {
+    let schemaElement = document.getElementById("search-schema");
+    if (schemaElement) {
+        let schemaData = JSON.parse(schemaElement.innerHTML);
+        schemaData.potentialAction.target = `https://finddupe.com/search?q=${encodeURIComponent(query)}`;
+        schemaElement.innerHTML = JSON.stringify(schemaData, null, 2);
+    }
+}
+
 function searchDupe() {
     let query = document.getElementById("searchBox").value;
     if (!query) {
         document.getElementById("results").innerText = "Please enter a search term.";
         return;
     }
+    updateSchema(query);
 
     fetch(`/.netlify/functions/finddupe?q=${encodeURIComponent(query)}`)
         .then(response => response.json())
