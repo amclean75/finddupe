@@ -5,19 +5,18 @@ function searchDupe() {
         return;
     }
 
-    fetch("/.netlify/functions/finddupe?query=" + encodeURIComponent(query))
+    fetch(`/.netlify/functions/finddupe?q=${encodeURIComponent(query)}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            if (data.dupeLink) {
-                document.getElementById("results").innerHTML =
-                    `<a href="${data.dupeLink}" target="_blank">Best dupe found: ${data.dupeTitle}</a>`;
+            const resultDiv = document.getElementById("results");
+            if (data.dupe && data.link) {
+                resultDiv.innerHTML = `Best dupe found: <strong>${data.dupe}</strong> <a href="${data.link}" target="_blank">[View on Amazon]</a>`;
             } else {
-                document.getElementById("results").innerText = "No dupe found.";
+                resultDiv.innerHTML = "No good dupe found. Try another search!";
             }
         })
         .catch(error => {
-            console.error("Error:", error);
-            document.getElementById("results").innerText = "Error fetching dupe.";
+            console.error("Error fetching dupe:", error);
+            document.getElementById("results").innerHTML = "Error finding a dupe. Please try again later.";
         });
 }
