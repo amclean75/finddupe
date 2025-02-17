@@ -1,7 +1,9 @@
 const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
-    const query = event.queryStringParameters.q;  
+    const query = event.queryStringParameters.q;
+    console.log("🔍 Search Query Received:", query); // Log search term
+
     const apiKey = "AIzaSyBDAg_ENG88ttCwbA0kN-_QT2lQP1cMQNY";  
     const geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
 
@@ -14,6 +16,8 @@ exports.handler = async (event) => {
     });
 
     const data = await response.json();
+    console.log("🔍 Full API Response:", JSON.stringify(data, null, 2)); // Log full response
+
     const dupeResult = data.candidates?.[0]?.content?.parts?.[0]?.text || "No Amazon dupe found.";
 
     // Generate a proper Amazon search URL with affiliate tag
