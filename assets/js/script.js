@@ -1,13 +1,22 @@
-document.getElementById("search-form").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    const query = document.getElementById("search-input").value;
-    const resultDiv = document.getElementById("result");
+function searchDupe() {
+    let query = document.getElementById("searchBox").value;
+    if (!query) {
+        document.getElementById("results").innerText = "Please enter a search term.";
+        return;
+    }
 
-    resultDiv.innerHTML = "Searching...";
-
-    const response = await fetch(`/.netlify/functions/finddupe?q=${encodeURIComponent(query)}`);
-    const data = await response.json();
-
-    resultDiv.innerHTML = `<strong>Best Dupe:</strong> ${data.dupe} <br>
-                           <a href="${data.link}" target="_blank">View on Amazon</a>`;
-});
+    fetch("/.netlify/functions/finddupe?query=" + encodeURIComponent(query))
+        .then(response => response.json())
+        .then(data => {
+            if (data.dupeLink) {
+                document.getElementById("results").innerHTML =
+                    `<a href="${data.dupeLink}" target="_blank">Best dupe found: ${data.dupeTitle}</a>`;
+            } else {
+                document.getElementById("results").innerText = "No dupe found.";
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById("results").innerText = "Error fetching dupe.";
+        });
+}
