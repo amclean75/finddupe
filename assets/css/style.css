@@ -13,11 +13,13 @@ header {
 }
 
 .main-container {
-    display: inline-flex;
+    display: flex;
+    justify-content: space-evenly;
 }
 
 #search {
     margin: 20px;
+    width: 50%;
 }
 
 input {
