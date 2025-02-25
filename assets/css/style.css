@@ -17,6 +17,18 @@ header {
     justify-content: space-evenly;
 }
 
+#left-rail {
+    width: auto;
+    max-width: 300px;
+    height: auto;
+}
+
+#right-rail {
+    width: auto;
+    max-width: 300px;
+    height: auto;
+}
+
 #search {
     margin: 20px;
     width: 50%;
