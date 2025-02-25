@@ -12,6 +12,10 @@ header {
     padding: 20px;
 }
 
+.main-container {
+    display: inline-flex;
+}
+
 #search {
     margin: 20px;
 }
