@@ -27,7 +27,7 @@ header {
 
 #search {
     margin: 20px;
-    width: 50%;
+    width: 100%;
 }
 
 input {
@@ -67,6 +67,10 @@ li a {
         display: block;
         width: 300px;
         height: auto;
+    }
+
+    #search {
+        width: 50%;
     }
 
     #right-rail {
