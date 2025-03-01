@@ -18,13 +18,11 @@ header {
 }
 
 #left-rail {
-    width: 300px;
-    height: auto;
+    display: none;
 }
 
 #right-rail {
-    width: 300px;
-    height: auto;
+    display: none;
 }
 
 #search {
@@ -62,4 +60,18 @@ ul {
 li a {
     text-decoration: none;
     color: #333;
+}
+
+@media screen and (min-width: 768px) {
+    #left-rail {
+        display: block;
+        width: 300px;
+        height: auto;
+    }
+
+    #right-rail {
+        display: block;
+        width: 300px;
+        height: auto;
+    }
 }
